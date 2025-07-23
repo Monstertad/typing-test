@@ -1,49 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Typing Test</title>
+  <title>타자 속도 측정</title>
   <style>
     body {
-      font-family: sans-serif;
-      max-width: 600px;
-      margin: auto;
-      padding: 2rem;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      margin-top: 100px;
     }
-    .target {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      background: #f0f0f0;
-      padding: 1rem;
-      border-radius: 8px;
+    #quote {
+      font-size: 24px;
+      margin-bottom: 20px;
     }
-    input[type="text"] {
-      width: 100%;
-      font-size: 1.2rem;
-      padding: 0.5rem;
+    #input {
+      font-size: 20px;
+      padding: 10px;
+      width: 80%;
+      margin-bottom: 20px;
+    }
+    #result {
+      font-size: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Typing Test</h1>
-  <div class="target" id="sentence">hello world</div>
-  <input type="text" id="inputBox" placeholder="Start typing here..." autofocus>
-  <p id="result"></p>
+  <div id="quote">hello world , 404 notfound</div>
+  <input type="text" id="input" placeholder="위 문장을 그대로 입력하세요" autofocus />
+  <div id="result"></div>
 
   <script>
-    const sentence = document.getElementById('sentence').innerText.trim();
-    const inputBox = document.getElementById('inputBox');
+    const quote = document.getElementById('quote').innerText;
+    const input = document.getElementById('input');
     const result = document.getElementById('result');
 
-    let startTime = null;
+    let startTime;
+    input.addEventListener('focus', () => {
+      if (!startTime) {
+        startTime = new Date();
+      }
+    });
 
-    inputBox.addEventListener('input', () => {
-      if (!startTime) startTime = new Date();
+    input.addEventListener('input', () => {
+      if (input.value === quote) {
+        const endTime = new Date();
+        const timeTaken = (endTime - startTime) / 1000; // 초
+        const numChars = quote.length;
+        const tasoo = Math.round((numChars / timeTaken) * 60); // 1분당 타수로 환산
 
-      if (inputBox.value.trim() === sentence) {
-        const timeTaken = (new Date() - startTime) / 1000;
-        result.innerText = `✅ Perfect! Time: ${timeTaken.toFixed(2)}s`;
-        inputBox.disabled = true;
+        result.innerText = `타수: ${tasoo} 타/분`;
+        input.disabled = true;
       }
     });
   </script>
