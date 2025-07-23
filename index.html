@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Typing Test</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+    }
+    .target {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      background: #f0f0f0;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    input[type="text"] {
+      width: 100%;
+      font-size: 1.2rem;
+      padding: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Typing Test</h1>
+  <div class="target" id="sentence">hello world</div>
+  <input type="text" id="inputBox" placeholder="Start typing here..." autofocus>
+  <p id="result"></p>
+
+  <script>
+    const sentence = document.getElementById('sentence').innerText.trim();
+    const inputBox = document.getElementById('inputBox');
+    const result = document.getElementById('result');
+
+    let startTime = null;
+
+    inputBox.addEventListener('input', () => {
+      if (!startTime) startTime = new Date();
+
+      if (inputBox.value.trim() === sentence) {
+        const timeTaken = (new Date() - startTime) / 1000;
+        result.innerText = `✅ Perfect! Time: ${timeTaken.toFixed(2)}s`;
+        inputBox.disabled = true;
+      }
+    });
+  </script>
+</body>
+</html>
