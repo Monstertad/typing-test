@@ -1,57 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>타자 속도 측정</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Test</title>
   <style>
     body {
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      margin-top: 100px;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
     }
-    #quote {
+    h1 {
+      margin-bottom: 20px;
+    }
+    #text {
       font-size: 24px;
       margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+    #text span.correct {
+      color: green;
+    }
+    #text span.incorrect {
+      color: red;
     }
     #input {
-      font-size: 20px;
+      font-size: 24px;
       padding: 10px;
       width: 80%;
-      margin-bottom: 20px;
+      max-width: 600px;
     }
     #result {
+      margin-top: 20px;
       font-size: 20px;
     }
   </style>
 </head>
 <body>
-  <div id="quote">hello world , 404 notfound</div>
-  <input type="text" id="input" placeholder="위 문장을 그대로 입력하세요" autofocus />
+  <h1>Typing Test</h1>
+  <div id="text"></div>
+  <input type="text" id="input" autocomplete="off" autofocus />
   <div id="result"></div>
 
   <script>
-    const quote = document.getElementById('quote').innerText;
-    const input = document.getElementById('input');
-    const result = document.getElementById('result');
+    const texts = ["hello world", "404 notfound"];
+    const fullText = texts.join(" \n");
+    const textElement = document.getElementById("text");
+    const inputElement = document.getElementById("input");
+    const resultElement = document.getElementById("result");
 
     let startTime;
-    input.addEventListener('focus', () => {
+
+    function displayText() {
+      textElement.innerHTML = '';
+      for (let i = 0; i < fullText.length; i++) {
+        const span = document.createElement('span');
+        span.innerText = fullText[i];
+        textElement.appendChild(span);
+      }
+    }
+
+    inputElement.addEventListener("input", () => {
+      const input = inputElement.value;
+      const spans = textElement.querySelectorAll('span');
+
       if (!startTime) {
         startTime = new Date();
       }
-    });
 
-    input.addEventListener('input', () => {
-      if (input.value === quote) {
+      let correctChars = 0;
+
+      for (let i = 0; i < spans.length; i++) {
+        const char = input[i];
+        const span = spans[i];
+
+        if (char == null) {
+          span.className = '';
+        } else if (char === span.innerText) {
+          span.className = 'correct';
+          correctChars++;
+        } else {
+          span.className = 'incorrect';
+        }
+      }
+
+      if (input === fullText) {
         const endTime = new Date();
-        const timeTaken = (endTime - startTime) / 1000; // 초
-        const numChars = quote.length;
-        const tasoo = Math.round((numChars / timeTaken) * 60); // 1분당 타수로 환산
-
-        result.innerText = `타수: ${tasoo} 타/분`;
-        input.disabled = true;
+        const timeInMinutes = (endTime - startTime) / 1000 / 60;
+        const wpm = Math.round((fullText.length / 5) / timeInMinutes);
+        resultElement.innerText = `WPM: ${wpm}`;
+        inputElement.disabled = true;
       }
     });
+
+    displayText();
   </script>
 </body>
 </html>
